@@ -81,9 +81,14 @@ export default function Welcome({
                                     <textarea
                                         value={data.targetURL}
                                         placeholder="Type your URL here!"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
-                                        rows={4}
+                                        className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
+                                        rows={3}
                                         readOnly={processing}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                            }
+                                        }}
                                         onChange={(e) =>
                                             setData('targetURL', e.target.value)
                                         }
