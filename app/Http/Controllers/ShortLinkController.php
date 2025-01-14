@@ -15,6 +15,15 @@ const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
 
 const SHORLINK_GENERATED_RETRIEVAL_ID_LENGTH = 8;
 
+/**
+ * Regular expression to validate URLs.
+ * - Ensures the URL starts with "http://" or "https://".
+ * - Requires a valid domain name, including optional subdomains.
+ * - Allows an optional port number (e.g., :8080).
+ * - Allows an optional path, query string, or fragment.
+ */
+const VALID_URL_REGEX = '/^https?:\/\/([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}(:\d+)?(\/[^\s]*)?$/';
+
 class ShortLinkController extends Controller
 {
     /**
@@ -39,7 +48,12 @@ class ShortLinkController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'targetURL' => 'required|string|max:' . MAX_URL_LENGTH,
+            'targetURL' => [
+                'required',
+                'string',
+                'max:' . MAX_URL_LENGTH,
+                'regex:' . VALID_URL_REGEX,
+            ]
         ]);
 
         $generateRetrievalID = function (): string {
