@@ -13,7 +13,7 @@ const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
     '0123456789';
 
-const SHORLINK_GENERATED_RETRIEVAL_ID_LENGTH = 8;
+const RETIREVAL_ID_LENGTH = 8;
 
 /**
  * Regular expression to validate URLs.
@@ -60,7 +60,7 @@ class ShortLinkController extends Controller
             mt_srand(time());
 
             $generatedID = '';
-            foreach (range(1, 8) as $i) {
+            foreach (range(1, RETIREVAL_ID_LENGTH) as $i) {
                 $alphaNumCharsLength = strlen(ALPHANUMERIC_CHARACTERS);
                 $randomIndex = mt_rand(0, $alphaNumCharsLength - 1);
 
