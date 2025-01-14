@@ -108,7 +108,7 @@ export default function Welcome({
                                         </PrimaryButton>
                                     </div>
                                 </form>
-                                {generatedURL ?? (
+                                {generatedURL && (
                                     <a
                                         href={generatedURL}
                                         target="_blank"
