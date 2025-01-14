@@ -99,7 +99,7 @@ export default function Welcome({
                                     />
                                     <div className="flex items-center justify-center">
                                         <PrimaryButton
-                                            className="mt-4"
+                                            className="my-4"
                                             disabled={processing}
                                         >
                                             {processing
@@ -109,13 +109,22 @@ export default function Welcome({
                                     </div>
                                 </form>
                                 {generatedURL && (
-                                    <a
-                                        href={generatedURL}
-                                        target="_blank"
-                                        rel="noreferrer noopener"
-                                    >
-                                        {`${import.meta.env.BASE_URL}${generatedURL}`}
-                                    </a>
+                                    <div className="flex flex-col items-center justify-center">
+                                        <a
+                                            href={generatedURL}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                        >
+                                            <textarea
+                                                className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
+                                                rows={1}
+                                                readOnly
+                                            >
+                                                {`${import.meta.env.BASE_URL}${generatedURL}`}
+                                            </textarea>
+                                        </a>
+                                        <p>Your short link is now ready!</p>
+                                    </div>
                                 )}
                             </div>
                         </main>
