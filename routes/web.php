@@ -22,16 +22,6 @@ Route::get('/', function (Request $request): Response {
     ]);
 })->name('home');
 
-Route::get('/{retrievalID}', function (Request $request, $retrievalID): RedirectResponse {
-    $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
-
-    if (is_null($shortLink)) {
-        return redirect(route('home'));
-    }
-
-    return redirect(url($shortLink->target_url));
-});
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -46,3 +36,13 @@ Route::resource('short-links', ShortLinkController::class)
     ->only(['store']);
 
 require __DIR__ . '/auth.php';
+
+Route::get('/{retrievalID}', function (Request $request, $retrievalID): RedirectResponse {
+    $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
+
+    if (is_null($shortLink)) {
+        return redirect(route('home'));
+    }
+
+    return redirect(url($shortLink->target_url));
+});
