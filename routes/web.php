@@ -10,7 +10,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-Route::get('/', function (Request $request): Response {
+Route::get('/', function (Request $request): Response | RedirectResponse {
+    $isUserAuthenticated = !is_null($request->user());
+    if ($isUserAuthenticated) {
+        return redirect(route('dashboard'));
+    }
+
     $generatedShortLinkID = $request->session()->get('generatedID');
 
     return Inertia::render('Welcome', [
