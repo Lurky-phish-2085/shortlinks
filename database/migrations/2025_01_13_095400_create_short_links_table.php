@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('short_links', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('retrieval_Id')->unique();
             $table->string('target_url');
             $table->timestamps();
