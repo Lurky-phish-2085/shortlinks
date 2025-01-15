@@ -47,6 +47,32 @@ class ShortLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $generateRetrievalID = function (): string {
+            $generateRandomAlphaNum = function (): string {
+                mt_srand(time());
+
+                $alphaNum = '';
+                foreach (range(1, RETIREVAL_ID_LENGTH) as $i) {
+                    $alphaNumCharsLength = strlen(ALPHANUMERIC_CHARACTERS);
+                    $randomIndex = mt_rand(0, $alphaNumCharsLength - 1);
+
+                    $alphaNum .= ALPHANUMERIC_CHARACTERS[$randomIndex];
+                }
+
+                return $alphaNum;
+            };
+            $retrievalIDExists = function ($retrievalID): bool {
+                return ShortLink::where('retrieval_Id', $retrievalID)->exists();
+            };
+
+            $generatedID = $generateRandomAlphaNum();
+            while ($retrievalIDExists($generatedID)) {
+                $generatedID = $generateRandomAlphaNum();
+            }
+
+            return $generatedID;
+        };
+
         $validated = $request->validate([
             'targetURL' => [
                 'required',
@@ -55,20 +81,6 @@ class ShortLinkController extends Controller
                 'regex:' . VALID_URL_REGEX,
             ]
         ]);
-
-        $generateRetrievalID = function (): string {
-            mt_srand(time());
-
-            $generatedID = '';
-            foreach (range(1, RETIREVAL_ID_LENGTH) as $i) {
-                $alphaNumCharsLength = strlen(ALPHANUMERIC_CHARACTERS);
-                $randomIndex = mt_rand(0, $alphaNumCharsLength - 1);
-
-                $generatedID .= ALPHANUMERIC_CHARACTERS[$randomIndex];
-            }
-
-            return $generatedID;
-        };
 
         $shortLink = ShortLink::create([
             'retrieval_Id' => $generateRetrievalID(),
