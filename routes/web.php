@@ -1,17 +1,35 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ShortLinkController;
+use App\Models\ShortLink;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Inertia\Response;
 
-Route::get('/', function () {
+Route::get('/', function (Request $request): Response {
+    $generatedShortLinkID = $request->session()->get('generatedID');
+
     return Inertia::render('Welcome', [
+        'generatedURL' => $generatedShortLinkID,
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+})->name('home');
+
+Route::get('/{retrievalID}', function (Request $request, $retrievalID): RedirectResponse {
+    $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
+
+    if (is_null($shortLink)) {
+        return redirect(route('home'));
+    }
+
+    return redirect(url($shortLink->target_url));
 });
 
 Route::get('/dashboard', function () {
@@ -24,4 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::resource('short-links', ShortLinkController::class)
+    ->only(['store']);
+
+require __DIR__ . '/auth.php';
