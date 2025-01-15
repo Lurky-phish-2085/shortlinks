@@ -2,7 +2,8 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { PageProps } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { BsFillClipboardFill } from 'react-icons/bs';
 
 export default function Welcome({
     generatedURL,
@@ -27,6 +28,23 @@ export default function Welcome({
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         post(route('short-links.store'));
+    };
+
+    const shortLinkAnchorRef = useRef<HTMLAnchorElement | null>(null);
+    const handleClipBoardCopy = () => {
+        const link = shortLinkAnchorRef.current?.href;
+        if (!link) {
+            return;
+        }
+
+        navigator.clipboard.writeText(link).then(
+            () => {
+                alert('Copied to clipboard!');
+            },
+            () => {
+                alert('Failed to copy to clipboard... Please try again.');
+            },
+        );
     };
 
     return (
@@ -116,18 +134,30 @@ export default function Welcome({
                                 </form>
                                 {shortLinkResult && (
                                     <div className="flex flex-col items-center justify-center">
-                                        <a
-                                            href={generatedURL}
-                                            target="_blank"
-                                            rel="noreferrer noopener"
-                                        >
-                                            <textarea
-                                                className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-                                                value={`${import.meta.env.BASE_URL}${shortLinkResult}`}
-                                                rows={1}
-                                                readOnly
-                                            ></textarea>
-                                        </a>
+                                        <div className="flex items-center justify-center">
+                                            <a
+                                                ref={shortLinkAnchorRef}
+                                                className="ml-8"
+                                                href={generatedURL}
+                                                target="_blank"
+                                                rel="noreferrer noopener"
+                                            >
+                                                <textarea
+                                                    className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
+                                                    value={`${import.meta.env.BASE_URL}${shortLinkResult}`}
+                                                    rows={1}
+                                                    readOnly
+                                                ></textarea>
+                                            </a>
+                                            <button
+                                                className="ml-4"
+                                                onClick={handleClipBoardCopy}
+                                            >
+                                                <i>
+                                                    <BsFillClipboardFill />
+                                                </i>
+                                            </button>
+                                        </div>
                                         <p>Your short link is now ready!</p>
                                     </div>
                                 )}
