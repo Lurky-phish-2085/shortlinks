@@ -41,7 +41,7 @@ Route::get('/{retrievalID}', function (Request $request, $retrievalID): Redirect
     $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
 
     if (is_null($shortLink)) {
-        return redirect(route('home'));
+        abort(404);
     }
 
     return redirect(url($shortLink->target_url));
