@@ -2,7 +2,7 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { PageProps } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 export default function Welcome({
     generatedURL,
@@ -14,13 +14,19 @@ export default function Welcome({
     laravelVersion: string;
     phpVersion: string;
 }>) {
-    const { data, setData, post, processing, reset, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         targetURL: '',
     });
 
+    const [shortLinkResult, setShortLinkResult] = useState(generatedURL ?? '');
+
+    useEffect(() => {
+        setShortLinkResult(generatedURL);
+    }, [generatedURL]);
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        post(route('short-links.store'), { onSuccess: () => reset() });
+        post(route('short-links.store'));
     };
 
     return (
@@ -108,7 +114,7 @@ export default function Welcome({
                                         </PrimaryButton>
                                     </div>
                                 </form>
-                                {generatedURL && (
+                                {shortLinkResult && (
                                     <div className="flex flex-col items-center justify-center">
                                         <a
                                             href={generatedURL}
@@ -117,11 +123,10 @@ export default function Welcome({
                                         >
                                             <textarea
                                                 className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
+                                                value={`${import.meta.env.BASE_URL}${shortLinkResult}`}
                                                 rows={1}
                                                 readOnly
-                                            >
-                                                {`${import.meta.env.BASE_URL}${generatedURL}`}
-                                            </textarea>
+                                            ></textarea>
                                         </a>
                                         <p>Your short link is now ready!</p>
                                     </div>
