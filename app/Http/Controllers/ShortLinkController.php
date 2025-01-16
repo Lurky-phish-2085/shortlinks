@@ -8,6 +8,7 @@ use App\Models\ShortLink;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 const MAX_URL_LENGTH = 2048;
 const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
@@ -66,7 +67,7 @@ class ShortLinkController extends Controller
 
                 return $alphaNum;
             };
-            $retrievalIDExists = function ($retrievalID): bool {
+            $retrievalIDExists = function (string $retrievalID): bool {
                 return ShortLink::where('retrieval_Id', $retrievalID)->exists();
             };
 
@@ -84,7 +85,8 @@ class ShortLinkController extends Controller
                 'string',
                 'max:' . MAX_URL_LENGTH,
                 'regex:' . VALID_URL_REGEX,
-            ]
+            ],
+            'title' => 'string|max:80'
         ]);
 
         $shortLink = null;
@@ -92,6 +94,7 @@ class ShortLinkController extends Controller
             $shortLink = $request->user()->shortLinks()->create([
                 'retrieval_Id' => $generateRetrievalID(),
                 'target_url' => $validated['targetURL'],
+                'title' => $validated['title'],
             ]);
         } else {
             $shortLink = ShortLink::create([
@@ -127,7 +130,15 @@ class ShortLinkController extends Controller
      */
     public function update(Request $request, ShortLink $shortLink)
     {
-        //
+        Gate::authorize('update', $shortLink);
+
+        $validated = $request->validate([
+            'title' => 'string|max:80',
+            'disabled' => 'boolean',
+            'deleted' => 'boolean',
+        ]);
+
+        $shortLink->update($validated);
     }
 
     /**
@@ -135,6 +146,10 @@ class ShortLinkController extends Controller
      */
     public function destroy(ShortLink $shortLink)
     {
-        //
+        Gate::authorize('delete', $shortLink);
+
+        $shortLink->update([
+            'deleted' => true
+        ]);
     }
 }

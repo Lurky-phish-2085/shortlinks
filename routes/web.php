@@ -29,9 +29,11 @@ Route::get('/', function (Request $request): Response | RedirectResponse {
 
 Route::get('/dashboard', function (Request $request) {
     $generatedShortLinkID = $request->session()->get('generatedID');
+    $shortLinks = $request->user()->shortLinks()->whereNot('deleted', true)->latest()->get();
 
     return Inertia::render('Dashboard', [
         'generatedURL' => $generatedShortLinkID,
+        'shortLinks' => $shortLinks,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -42,14 +44,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('short-links', ShortLinkController::class)
-    ->only(['index', 'store']);
+    ->only(['index', 'store', 'update', 'destroy']);
 
 require __DIR__ . '/auth.php';
 
-Route::get('/{retrievalID}', function (Request $request, $retrievalID): RedirectResponse {
+Route::get('/{retrievalID}', function (string $retrievalID): RedirectResponse {
     $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
 
-    if (is_null($shortLink)) {
+    if (is_null($shortLink) || $shortLink->disabled || $shortLink->deleted) {
         abort(404);
     }
 
