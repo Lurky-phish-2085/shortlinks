@@ -8,11 +8,16 @@ const CLIPBOARD_CHECKED_STATE_DURATION = 2 * 1000;
 
 type ShortLinkCreateFormProps = {
     result: string | null;
+    titleEnabled?: boolean;
 };
 
-function ShortLinkCreateForm({ result }: ShortLinkCreateFormProps) {
+function ShortLinkCreateForm({
+    result,
+    titleEnabled = false,
+}: ShortLinkCreateFormProps) {
     const { data, setData, post, processing, errors } = useForm({
         targetURL: '',
+        title: '',
     });
 
     const preventNewLines = (e: KeyboardEvent) => {
@@ -60,6 +65,18 @@ function ShortLinkCreateForm({ result }: ShortLinkCreateFormProps) {
     return (
         <>
             <form onSubmit={submit}>
+                {titleEnabled && (
+                    <>
+                        <input
+                            className="mb-4 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
+                            type="text"
+                            placeholder="Title"
+                            value={data.title}
+                            onChange={(e) => setData('title', e.target.value)}
+                        />
+                        <InputError message={errors.title} className="mt-2" />
+                    </>
+                )}
                 <textarea
                     className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
                     placeholder="Type your URL here!"
