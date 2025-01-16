@@ -1,9 +1,6 @@
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
+import ShortLinkCreateForm from '@/Components/ShortLinkCreateForm';
 import { PageProps } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import { BsFillClipboardFill } from 'react-icons/bs';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Welcome({
     generatedURL,
@@ -15,38 +12,6 @@ export default function Welcome({
     laravelVersion: string;
     phpVersion: string;
 }>) {
-    const { data, setData, post, processing, errors } = useForm({
-        targetURL: '',
-    });
-
-    const [shortLinkResult, setShortLinkResult] = useState(generatedURL ?? '');
-
-    useEffect(() => {
-        setShortLinkResult(generatedURL);
-    }, [generatedURL]);
-
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        post(route('short-links.store'));
-    };
-
-    const shortLinkAnchorRef = useRef<HTMLAnchorElement | null>(null);
-    const handleClipBoardCopy = () => {
-        const link = shortLinkAnchorRef.current?.href;
-        if (!link) {
-            return;
-        }
-
-        navigator.clipboard.writeText(link).then(
-            () => {
-                alert('Copied to clipboard!');
-            },
-            () => {
-                alert('Failed to copy to clipboard... Please try again.');
-            },
-        );
-    };
-
     return (
         <>
             <Head title="Welcome" />
@@ -101,66 +66,7 @@ export default function Welcome({
 
                         <main className="mt-6">
                             <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
-                                <form onSubmit={handleSubmit}>
-                                    <textarea
-                                        value={data.targetURL}
-                                        placeholder="Type your URL here!"
-                                        className="block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
-                                        rows={3}
-                                        readOnly={processing}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                            }
-                                        }}
-                                        onChange={(e) =>
-                                            setData('targetURL', e.target.value)
-                                        }
-                                    ></textarea>
-                                    <InputError
-                                        message={errors.targetURL}
-                                        className="mt-2"
-                                    />
-                                    <div className="flex items-center justify-center">
-                                        <PrimaryButton
-                                            className="my-4"
-                                            disabled={processing}
-                                        >
-                                            {processing
-                                                ? 'GENERATING...'
-                                                : 'SHORTEN'}
-                                        </PrimaryButton>
-                                    </div>
-                                </form>
-                                {shortLinkResult && (
-                                    <div className="flex flex-col items-center justify-center">
-                                        <div className="flex items-center justify-center">
-                                            <a
-                                                ref={shortLinkAnchorRef}
-                                                className="ml-8"
-                                                href={generatedURL}
-                                                target="_blank"
-                                                rel="noreferrer noopener"
-                                            >
-                                                <textarea
-                                                    className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-                                                    value={`${import.meta.env.BASE_URL}${shortLinkResult}`}
-                                                    rows={1}
-                                                    readOnly
-                                                ></textarea>
-                                            </a>
-                                            <button
-                                                className="ml-4"
-                                                onClick={handleClipBoardCopy}
-                                            >
-                                                <i>
-                                                    <BsFillClipboardFill />
-                                                </i>
-                                            </button>
-                                        </div>
-                                        <p>Your short link is now ready!</p>
-                                    </div>
-                                )}
+                                <ShortLinkCreateForm result={generatedURL} />
                             </div>
                         </main>
 

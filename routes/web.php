@@ -6,11 +6,16 @@ use App\Models\ShortLink;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-Route::get('/', function (Request $request): Response {
+Route::get('/', function (Request $request): Response | RedirectResponse {
+    if (Auth::check()) {
+        return redirect(route('dashboard'));
+    }
+
     $generatedShortLinkID = $request->session()->get('generatedID');
 
     return Inertia::render('Welcome', [
@@ -22,8 +27,14 @@ Route::get('/', function (Request $request): Response {
     ]);
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+Route::get('/dashboard', function (Request $request) {
+    $generatedShortLinkID = $request->session()->get('generatedID');
+    $shortLinks = $request->user()->shortLinks()->whereNot('deleted', true)->latest()->get();
+
+    return Inertia::render('Dashboard', [
+        'generatedURL' => $generatedShortLinkID,
+        'shortLinks' => $shortLinks,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -33,14 +44,14 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('short-links', ShortLinkController::class)
-    ->only(['store']);
+    ->only(['index', 'store', 'update', 'destroy']);
 
 require __DIR__ . '/auth.php';
 
-Route::get('/{retrievalID}', function (Request $request, $retrievalID): RedirectResponse {
+Route::get('/{retrievalID}', function (string $retrievalID): RedirectResponse {
     $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
 
-    if (is_null($shortLink)) {
+    if (is_null($shortLink) || $shortLink->disabled || $shortLink->deleted) {
         abort(404);
     }
 
