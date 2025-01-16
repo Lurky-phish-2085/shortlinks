@@ -6,13 +6,13 @@ use App\Models\ShortLink;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 Route::get('/', function (Request $request): Response | RedirectResponse {
-    $isUserAuthenticated = !is_null($request->user());
-    if ($isUserAuthenticated) {
+    if (Auth::check()) {
         return redirect(route('dashboard'));
     }
 
@@ -27,8 +27,12 @@ Route::get('/', function (Request $request): Response | RedirectResponse {
     ]);
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+Route::get('/dashboard', function (Request $request) {
+    $generatedShortLinkID = $request->session()->get('generatedID');
+
+    return Inertia::render('Dashboard', [
+        'generatedURL' => $generatedShortLinkID,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

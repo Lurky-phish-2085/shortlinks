@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Models\ShortLink;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 const MAX_URL_LENGTH = 2048;
 const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
@@ -82,12 +83,24 @@ class ShortLinkController extends Controller
             ]
         ]);
 
-        $shortLink = ShortLink::create([
-            'retrieval_Id' => $generateRetrievalID(),
-            'target_url' => $validated['targetURL'],
-        ]);
+        $userAuthenticated = Auth::check();
+        $nextRoute = $userAuthenticated ? 'dashboard' : 'home';
+        $shortLink = null;
 
-        return redirect(route('home'))->with([
+        if ($userAuthenticated) {
+            $shortLink = $request->user()->shortLinks()->create([
+                'retrieval_Id' => $generateRetrievalID(),
+                'target_url' => $validated['targetURL'],
+            ]);
+        } else {
+            $shortLink = ShortLink::create([
+                'retrieval_Id' => $generateRetrievalID(),
+                'target_url' => $validated['targetURL'],
+            ]);
+        }
+
+
+        return redirect(route($nextRoute))->with([
             'generatedID' => $shortLink->retrieval_Id,
         ]);
     }
