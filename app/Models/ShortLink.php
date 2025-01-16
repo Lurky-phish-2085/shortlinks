@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ShortLink extends Model
 {
     protected $fillable = [
+        'title',
         'retrieval_Id',
         'target_url',
+        'disabled',
+        'deleted',
     ];
 
     public function user(): BelongsTo
