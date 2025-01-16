@@ -86,7 +86,7 @@ class ShortLinkController extends Controller
                 'max:' . MAX_URL_LENGTH,
                 'regex:' . VALID_URL_REGEX,
             ],
-            'title' => 'string|max:80'
+            'title' => 'nullable|string|max:80'
         ]);
 
         $shortLink = null;

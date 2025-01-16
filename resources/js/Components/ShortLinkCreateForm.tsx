@@ -68,13 +68,13 @@ function ShortLinkCreateForm({
                 {titleEnabled && (
                     <>
                         <input
-                            className="mb-4 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
+                            className="mb-2 block w-full resize-none rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-800 dark:text-gray-50"
                             type="text"
                             placeholder="Title"
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
                         />
-                        <InputError message={errors.title} className="mt-2" />
+                        <InputError message={errors.title} className="mb-4" />
                     </>
                 )}
                 <textarea
