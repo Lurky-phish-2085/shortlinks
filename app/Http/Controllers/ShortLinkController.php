@@ -30,9 +30,13 @@ class ShortLinkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): RedirectResponse
     {
-        //
+        $nextRoute = Auth::check() ? 'dashboard' : 'home';
+
+        return redirect(route($nextRoute))->with([
+            'generatedID' => $request->session()->get('generatedID'),
+        ]);
     }
 
     /**
@@ -83,11 +87,8 @@ class ShortLinkController extends Controller
             ]
         ]);
 
-        $userAuthenticated = Auth::check();
-        $nextRoute = $userAuthenticated ? 'dashboard' : 'home';
         $shortLink = null;
-
-        if ($userAuthenticated) {
+        if (Auth::check()) {
             $shortLink = $request->user()->shortLinks()->create([
                 'retrieval_Id' => $generateRetrievalID(),
                 'target_url' => $validated['targetURL'],
@@ -100,7 +101,7 @@ class ShortLinkController extends Controller
         }
 
 
-        return redirect(route($nextRoute))->with([
+        return redirect(route('short-links.index'))->with([
             'generatedID' => $shortLink->retrieval_Id,
         ]);
     }

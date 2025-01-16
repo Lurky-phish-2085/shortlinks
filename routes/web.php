@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('short-links', ShortLinkController::class)
-    ->only(['store']);
+    ->only(['index', 'store']);
 
 require __DIR__ . '/auth.php';
 
