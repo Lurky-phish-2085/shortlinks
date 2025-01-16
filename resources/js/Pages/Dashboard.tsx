@@ -1,7 +1,13 @@
+import ShortLink from '@/Components/ShortLink';
+import ShortLinkCreateForm from '@/Components/ShortLinkCreateForm';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { PageProps, ShortLinkType } from '@/types';
 import { Head } from '@inertiajs/react';
 
-export default function Dashboard() {
+export default function Dashboard({
+    generatedURL,
+    shortLinks,
+}: PageProps<{ generatedURL: string; shortLinks: ShortLinkType[] | null }>) {
     return (
         <AuthenticatedLayout
             header={
@@ -13,11 +19,13 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            You're logged in!
-                        </div>
+                <div className="mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
+                    <ShortLinkCreateForm result={generatedURL} titleEnabled />
+                    <div className="mt-6 divide-y rounded-lg bg-white shadow-sm">
+                        {shortLinks &&
+                            shortLinks.map((link) => (
+                                <ShortLink key={link.id} link={link} />
+                            ))}
                     </div>
                 </div>
             </div>
