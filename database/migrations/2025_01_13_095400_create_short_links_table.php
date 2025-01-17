@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('title')->nullable();
-            $table->string('retrieval_Id')->unique();
+            $table->string('retrieval_id')->unique()->default('');
             $table->string('target_url');
             $table->boolean('disabled')->default(false);
             $table->boolean('deleted')->default(false);

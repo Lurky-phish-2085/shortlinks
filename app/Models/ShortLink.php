@@ -9,7 +9,6 @@ class ShortLink extends Model
 {
     protected $fillable = [
         'title',
-        'retrieval_Id',
         'target_url',
         'disabled',
         'deleted',
