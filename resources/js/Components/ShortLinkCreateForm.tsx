@@ -15,11 +15,14 @@ function ShortLinkCreateForm({
     result,
     titleEnabled = false,
 }: ShortLinkCreateFormProps) {
+    const resultURL = route('short-link-redirect', {
+        retrievalID: result ?? '',
+    });
+
     const { data, setData, post, processing, errors } = useForm({
         targetURL: '',
         title: '',
     });
-
     const preventNewLines = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -99,13 +102,13 @@ function ShortLinkCreateForm({
                         <a
                             ref={resultAnchorRef}
                             className="ml-8"
-                            href={result}
+                            href={resultURL}
                             target="_blank"
                             rel="noreferrer noopener"
                         >
                             <textarea
                                 className="block w-full cursor-pointer resize-none rounded-md border-gray-300 text-center shadow-sm hover:bg-slate-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700"
-                                value={`${import.meta.env.BASE_URL}${result}`}
+                                value={resultURL}
                                 rows={1}
                                 readOnly
                             ></textarea>
