@@ -21,6 +21,10 @@ export default function ShortLink({ link }: ShortLinkProps) {
 
     const [editing, setEditing] = useState(false);
 
+    const resultURL = route('short-link-redirect', {
+        retrievalID: link.retrieval_id ?? '',
+    });
+
     const { data, setData, patch, clearErrors, reset, errors, processing } =
         useForm({
             title: link.title ?? link.retrieval_id,
@@ -154,7 +158,7 @@ export default function ShortLink({ link }: ShortLinkProps) {
                                     <a
                                         ref={shortLinkAnchorRef}
                                         className="underline-offset-2 hover:text-blue-600 hover:underline"
-                                        href={`${import.meta.env.BASE_URL}${link.retrieval_id}`}
+                                        href={resultURL}
                                         target="_blank"
                                         rel="noreferrer noopener"
                                     >

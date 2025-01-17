@@ -56,4 +56,4 @@ Route::get('/{retrievalID}', function (string $retrievalID): RedirectResponse {
     }
 
     return redirect(url($shortLink->target_url));
-});
+})->name('short-link-redirect');
