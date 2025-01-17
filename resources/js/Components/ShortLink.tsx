@@ -2,11 +2,12 @@ import { ShortLinkType } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
-import { BsFillClipboardFill } from 'react-icons/bs';
 import { MdModeEditOutline } from 'react-icons/md';
+import CopyClipboardButton from './CopyClipboardButton';
 import Dropdown from './Dropdown';
+import IconButton from './IconButton';
 import InputError from './InputError';
 import PrimaryButton from './PrimaryButton';
 
@@ -44,23 +45,6 @@ export default function ShortLink({ link }: ShortLinkProps) {
         patch(route('short-links.update', link.id), {
             onSuccess: () => setEditing(false),
         });
-    };
-
-    const shortLinkAnchorRef = useRef<HTMLAnchorElement | null>(null);
-    const copyToClipboard = () => {
-        const link = shortLinkAnchorRef.current?.href;
-        if (!link) {
-            return;
-        }
-
-        navigator.clipboard.writeText(link).then(
-            () => {
-                alert('Copied to clipboard!');
-            },
-            () => {
-                alert('Failed to copy to clipboard... Please try again.');
-            },
-        );
     };
 
     return (
@@ -147,45 +131,36 @@ export default function ShortLink({ link }: ShortLinkProps) {
                 ) : (
                     <>
                         <div className="mt-4 flex">
-                            <div className="text-lg text-gray-900">
-                                {link.disabled ? (
-                                    <p className="text-slate-400">
-                                        {link.title
-                                            ? link.title
-                                            : link.retrieval_id}
-                                    </p>
-                                ) : (
-                                    <a
-                                        ref={shortLinkAnchorRef}
-                                        className="underline-offset-2 hover:text-blue-600 hover:underline"
-                                        href={resultURL}
-                                        target="_blank"
-                                        rel="noreferrer noopener"
-                                    >
-                                        {link.title
-                                            ? link.title
-                                            : link.retrieval_id}
-                                    </a>
+                            <div className="flex gap-2">
+                                <div className="text-lg text-gray-900">
+                                    {link.disabled ? (
+                                        <p className="text-slate-400">
+                                            {link.title
+                                                ? link.title
+                                                : link.retrieval_id}
+                                        </p>
+                                    ) : (
+                                        <a
+                                            className="underline-offset-2 hover:text-blue-600 hover:underline"
+                                            href={resultURL}
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                        >
+                                            {link.title
+                                                ? link.title
+                                                : link.retrieval_id}
+                                        </a>
+                                    )}
+                                </div>
+                                {!link.disabled && (
+                                    <CopyClipboardButton
+                                        valueToCopy={resultURL}
+                                    />
                                 )}
-                            </div>
-                            {!link.disabled && (
-                                <button
-                                    className="ml-2"
-                                    onClick={copyToClipboard}
-                                >
-                                    <i>
-                                        <BsFillClipboardFill />
-                                    </i>
-                                </button>
-                            )}
-                            <button
-                                className="ml-2"
-                                onClick={() => setEditing(true)}
-                            >
-                                <i>
+                                <IconButton onClick={() => setEditing(true)}>
                                     <MdModeEditOutline />
-                                </i>
-                            </button>
+                                </IconButton>
+                            </div>
                         </div>
                         <small className="text-sm text-gray-600">
                             {link.target_url}

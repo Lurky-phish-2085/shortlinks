@@ -1,10 +1,8 @@
 import { useForm } from '@inertiajs/react';
-import { FormEvent, KeyboardEvent, useRef, useState } from 'react';
-import { BsFillClipboardCheckFill, BsFillClipboardFill } from 'react-icons/bs';
+import { FormEvent, KeyboardEvent } from 'react';
+import CopyClipboardButton from './CopyClipboardButton';
 import InputError from './InputError';
 import PrimaryButton from './PrimaryButton';
-
-const CLIPBOARD_CHECKED_STATE_DURATION = 2 * 1000;
 
 type ShortLinkCreateFormProps = {
     result: string | null;
@@ -32,37 +30,6 @@ function ShortLinkCreateForm({
     const submit = (e: FormEvent) => {
         e.preventDefault();
         post(route('short-links.store'));
-    };
-
-    const [clipboardChecked, setClipboardChecked] = useState(false);
-    const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-    const checkClipboard = () => {
-        setClipboardChecked(true);
-        buttonRef.current?.classList.toggle('text-slate-400');
-
-        setTimeout(() => {
-            setClipboardChecked(false);
-            buttonRef.current?.classList.toggle('text-slate-400');
-        }, CLIPBOARD_CHECKED_STATE_DURATION);
-    };
-
-    const resultAnchorRef = useRef<HTMLAnchorElement | null>(null);
-
-    const copyToClipboard = () => {
-        const link = resultAnchorRef.current?.href;
-        if (!link) {
-            return;
-        }
-
-        navigator.clipboard.writeText(link).then(
-            () => {
-                checkClipboard();
-            },
-            () => {
-                alert('Failed to copy to clipboard... Please try again.');
-            },
-        );
     };
 
     return (
@@ -100,7 +67,6 @@ function ShortLinkCreateForm({
                 <div className="flex flex-col items-center justify-center">
                     <div className="flex items-center justify-center">
                         <a
-                            ref={resultAnchorRef}
                             className="ml-8"
                             href={resultURL}
                             target="_blank"
@@ -113,19 +79,10 @@ function ShortLinkCreateForm({
                                 readOnly
                             ></textarea>
                         </a>
-                        <button
-                            ref={buttonRef}
-                            className="ml-4 hover:text-slate-400"
-                            onClick={copyToClipboard}
-                        >
-                            <i>
-                                {clipboardChecked ? (
-                                    <BsFillClipboardCheckFill />
-                                ) : (
-                                    <BsFillClipboardFill />
-                                )}
-                            </i>
-                        </button>
+                        <CopyClipboardButton
+                            className="ml-4"
+                            valueToCopy={resultURL}
+                        />
                     </div>
                     <p>Your short link is now ready!</p>
                 </div>
