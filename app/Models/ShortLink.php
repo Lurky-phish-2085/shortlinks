@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,5 +19,11 @@ class ShortLink extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function incrementClicks(): void
+    {
+        $this->increment('clicks');
+        $this->save();
     }
 }

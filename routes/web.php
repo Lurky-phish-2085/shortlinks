@@ -55,5 +55,7 @@ Route::get('/{retrievalID}', function (string $retrievalID): RedirectResponse {
         abort(404);
     }
 
+    $shortLink->incrementClicks();
+
     return redirect(url($shortLink->target_url));
 })->name('short-link-redirect');
