@@ -13,6 +13,7 @@ export interface ShortLinkType {
     title: string;
     retrieval_id: string;
     target_url: string;
+    clicks: number;
     disabled: boolean;
     deleted: boolean;
     created_at: string;

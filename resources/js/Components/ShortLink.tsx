@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { FormEvent, useState } from 'react';
 import { AiOutlineLink } from 'react-icons/ai';
+import { HiCursorClick } from 'react-icons/hi';
 import { MdModeEditOutline } from 'react-icons/md';
 import CopyClipboardButton from './CopyClipboardButton';
 import Dropdown from './Dropdown';
@@ -162,8 +163,13 @@ export default function ShortLink({ link }: ShortLinkProps) {
                                 </IconButton>
                             </div>
                         </div>
-                        <small className="text-sm text-gray-600">
+                        <small className="block text-sm text-gray-600">
                             {link.target_url}
+                        </small>
+                        <small className="flex items-center text-sm text-gray-600">
+                            <HiCursorClick />
+                            <span>&nbsp;</span>
+                            <span>{link.clicks}</span>
                         </small>
                     </>
                 )}
