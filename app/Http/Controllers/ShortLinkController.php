@@ -68,7 +68,7 @@ class ShortLinkController extends Controller
                 return $alphaNum;
             };
             $retrievalIDExists = function (string $retrievalID): bool {
-                return ShortLink::where('retrieval_Id', $retrievalID)->exists();
+                return ShortLink::where('retrieval_id', $retrievalID)->exists();
             };
 
             $generatedID = $generateRandomAlphaNum();
@@ -92,20 +92,20 @@ class ShortLinkController extends Controller
         $shortLink = null;
         if (Auth::check()) {
             $shortLink = $request->user()->shortLinks()->create([
-                'retrieval_Id' => $generateRetrievalID(),
                 'target_url' => $validated['targetURL'],
                 'title' => $validated['title'],
             ]);
         } else {
             $shortLink = ShortLink::create([
-                'retrieval_Id' => $generateRetrievalID(),
                 'target_url' => $validated['targetURL'],
             ]);
         }
 
+        $shortLink->retrieval_id = $generateRetrievalID();
+        $shortLink->save();
 
         return redirect(route('short-links.index'))->with([
-            'generatedID' => $shortLink->retrieval_Id,
+            'generatedID' => $shortLink->retrieval_id,
         ]);
     }
 

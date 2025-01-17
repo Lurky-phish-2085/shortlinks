@@ -23,7 +23,7 @@ export default function ShortLink({ link }: ShortLinkProps) {
 
     const { data, setData, patch, clearErrors, reset, errors, processing } =
         useForm({
-            title: link.title ?? link.retrieval_Id,
+            title: link.title ?? link.retrieval_id,
             disabled: link.disabled,
             deleted: link.deleted,
         });
@@ -66,7 +66,7 @@ export default function ShortLink({ link }: ShortLinkProps) {
                 <div className="flex items-center justify-between">
                     <div>
                         <small className="text-sm text-gray-600">
-                            {link.retrieval_Id}
+                            {link.retrieval_id}
                         </small>
                         <small className="ml-2 text-sm text-gray-600">
                             {dayjs(link.created_at).fromNow()}
@@ -148,19 +148,19 @@ export default function ShortLink({ link }: ShortLinkProps) {
                                     <p className="text-slate-400">
                                         {link.title
                                             ? link.title
-                                            : link.retrieval_Id}
+                                            : link.retrieval_id}
                                     </p>
                                 ) : (
                                     <a
                                         ref={shortLinkAnchorRef}
                                         className="underline-offset-2 hover:text-blue-600 hover:underline"
-                                        href={`${import.meta.env.BASE_URL}${link.retrieval_Id}`}
+                                        href={`${import.meta.env.BASE_URL}${link.retrieval_id}`}
                                         target="_blank"
                                         rel="noreferrer noopener"
                                     >
                                         {link.title
                                             ? link.title
-                                            : link.retrieval_Id}
+                                            : link.retrieval_id}
                                     </a>
                                 )}
                             </div>

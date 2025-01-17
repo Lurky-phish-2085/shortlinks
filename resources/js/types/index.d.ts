@@ -11,7 +11,7 @@ export interface ShortLinkType {
     id: number;
     user_id: number;
     title: string;
-    retrieval_Id: string;
+    retrieval_id: string;
     target_url: string;
     disabled: boolean;
     deleted: boolean;
