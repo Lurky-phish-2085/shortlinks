@@ -51,7 +51,9 @@ require __DIR__ . '/auth.php';
 Route::get('/{retrievalID}', function (string $retrievalID): RedirectResponse {
     $shortLink = ShortLink::where('retrieval_Id', $retrievalID)->first();
 
-    if (is_null($shortLink) || $shortLink->disabled || $shortLink->deleted) {
+    $notAvailable = is_null($shortLink) || $shortLink->disabled || $shortLink->deleted;
+
+    if ($notAvailable) {
         abort(404);
     }
 
