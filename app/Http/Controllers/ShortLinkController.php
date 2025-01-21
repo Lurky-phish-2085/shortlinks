@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 const MAX_URL_LENGTH = 2048;
-const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
-    '0123456789';
-
-const RETIREVAL_ID_LENGTH = 8;
 
 /**
  * Regular expression to validate URLs.
@@ -53,32 +48,6 @@ class ShortLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $generateRetrievalID = function (): string {
-            $generateRandomAlphaNum = function (): string {
-                mt_srand(time());
-
-                $alphaNum = '';
-                foreach (range(1, RETIREVAL_ID_LENGTH) as $i) {
-                    $alphaNumCharsLength = strlen(ALPHANUMERIC_CHARACTERS);
-                    $randomIndex = mt_rand(0, $alphaNumCharsLength - 1);
-
-                    $alphaNum .= ALPHANUMERIC_CHARACTERS[$randomIndex];
-                }
-
-                return $alphaNum;
-            };
-            $retrievalIDExists = function (string $retrievalID): bool {
-                return ShortLink::where('retrieval_id', $retrievalID)->exists();
-            };
-
-            $generatedID = $generateRandomAlphaNum();
-            while ($retrievalIDExists($generatedID)) {
-                $generatedID = $generateRandomAlphaNum();
-            }
-
-            return $generatedID;
-        };
-
         $validated = $request->validate([
             'targetURL' => [
                 'required',
@@ -100,9 +69,6 @@ class ShortLinkController extends Controller
                 'target_url' => $validated['targetURL'],
             ]);
         }
-
-        $shortLink->retrieval_id = $generateRetrievalID();
-        $shortLink->save();
 
         return redirect(route('short-links.index'))->with([
             'generatedID' => $shortLink->retrieval_id,
