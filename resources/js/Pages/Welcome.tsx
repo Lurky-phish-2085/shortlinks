@@ -1,3 +1,4 @@
+import ApplicationLogo from '@/Components/ApplicationLogo';
 import ShortLinkCreateForm from '@/Components/ShortLinkCreateForm';
 import { PageProps } from '@/types';
 import { Head, Link } from '@inertiajs/react';
@@ -11,7 +12,23 @@ export default function Welcome({
 }>) {
     return (
         <>
-            <Head title="Welcome" />
+            <Head title="Welcome">
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/favicon-96x96.png"
+                    sizes="96x96"
+                />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <link
+                    rel="apple-touch-icon"
+                    sizes="180x180"
+                    href="/apple-touch-icon.png"
+                />
+                <meta name="apple-mobile-web-app-title" content="ShortLinks" />
+                <link rel="manifest" href="/site.webmanifest" />
+            </Head>
             <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white">
                 <div className="relative flex min-h-screen flex-col items-center">
                     <div className="flex h-full w-full flex-col">
@@ -63,22 +80,7 @@ export default function Welcome({
                                         links.
                                     </p>
                                 </hgroup>
-                                <svg
-                                    className="my-auto mr-36 hidden lg:block"
-                                    width="256px"
-                                    height="256px"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        className="stroke-slate-500"
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M10.975 14.51a1.05 1.05 0 0 0 0-1.485 2.95 2.95 0 0 1 0-4.172l3.536-3.535a2.95 2.95 0 1 1 4.172 4.172l-1.093 1.092a1.05 1.05 0 0 0 1.485 1.485l1.093-1.092a5.05 5.05 0 0 0-7.142-7.142L9.49 7.368a5.05 5.05 0 0 0 0 7.142c.41.41 1.075.41 1.485 0zm2.05-5.02a1.05 1.05 0 0 0 0 1.485 2.95 2.95 0 0 1 0 4.172l-3.5 3.5a2.95 2.95 0 1 1-4.171-4.172l1.025-1.025a1.05 1.05 0 0 0-1.485-1.485L3.87 12.99a5.05 5.05 0 0 0 7.142 7.142l3.5-3.5a5.05 5.05 0 0 0 0-7.142 1.05 1.05 0 0 0-1.485 0z"
-                                        fill="#000000"
-                                    />
-                                </svg>
+                                <ApplicationLogo className="my-auto mr-36 hidden lg:block" />
                             </div>
                             <div className="-my-16 mx-auto max-w-2xl p-4 sm:p-6 lg:p-8">
                                 <ShortLinkCreateForm result={generatedURL} />
