@@ -12,7 +12,23 @@ export default function Welcome({
 }>) {
     return (
         <>
-            <Head title="Welcome" />
+            <Head title="Welcome">
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href="/favicon-96x96.png"
+                    sizes="96x96"
+                />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <link
+                    rel="apple-touch-icon"
+                    sizes="180x180"
+                    href="/apple-touch-icon.png"
+                />
+                <meta name="apple-mobile-web-app-title" content="ShortLinks" />
+                <link rel="manifest" href="/site.webmanifest" />
+            </Head>
             <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white">
                 <div className="relative flex min-h-screen flex-col items-center">
                     <div className="flex h-full w-full flex-col">
