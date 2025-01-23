@@ -39,12 +39,14 @@ export default function ShortLink({ link }: ShortLinkProps) {
             onBefore: () => {
                 data.disabled = !data.disabled;
             },
+            preserveScroll: true,
         });
     };
     const submit = (e: FormEvent) => {
         e.preventDefault();
         patch(route('short-links.update', link.id), {
             onSuccess: () => setEditing(false),
+            preserveScroll: true,
         });
     };
 
@@ -92,6 +94,7 @@ export default function ShortLink({ link }: ShortLinkProps) {
                                     as="button"
                                     href={route('short-links.destroy', link.id)}
                                     method="delete"
+                                    preserveScroll
                                 >
                                     Delete
                                 </Dropdown.Link>

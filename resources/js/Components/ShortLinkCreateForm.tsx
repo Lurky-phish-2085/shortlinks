@@ -29,7 +29,10 @@ function ShortLinkCreateForm({
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
-        post(route('short-links.store'));
+        post(route('short-links.store'), {
+            preserveScroll: true,
+            preserveState: true,
+        });
     };
 
     return (
