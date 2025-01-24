@@ -26,3 +26,8 @@ createInertiaApp({
         color: '#4B5563',
     },
 });
+
+window.addEventListener('popstate', (event) => {
+    event.stopImmediatePropagation();
+    window.location.reload();
+});
