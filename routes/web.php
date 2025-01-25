@@ -6,16 +6,11 @@ use App\Models\ShortLink;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 Route::get('/', function (Request $request): Response | RedirectResponse {
-    if (Auth::check()) {
-        return redirect(route('dashboard'));
-    }
-
     $generatedShortLinkID = $request->session()->get('generatedID');
 
     return Inertia::render('Welcome', [
@@ -25,7 +20,7 @@ Route::get('/', function (Request $request): Response | RedirectResponse {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('home');
+})->middleware('guest')->name('home');
 
 Route::get('/dashboard', function (Request $request) {
     $generatedShortLinkID = $request->session()->get('generatedID');
