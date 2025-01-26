@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 const ALPHANUMERIC_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz' .
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
@@ -15,6 +16,9 @@ const RETIREVAL_ID_LENGTH = 8;
 
 class ShortLink extends Model
 {
+
+    use SoftDeletes;
+
     protected $fillable = [
         'title',
         'target_url',

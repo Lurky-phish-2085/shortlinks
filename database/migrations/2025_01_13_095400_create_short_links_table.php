@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('target_url');
             $table->integer('clicks')->default(0);
             $table->boolean('disabled')->default(false);
-            $table->boolean('deleted')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

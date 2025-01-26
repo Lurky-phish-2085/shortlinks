@@ -114,8 +114,6 @@ class ShortLinkController extends Controller
     {
         Gate::authorize('delete', $shortLink);
 
-        $shortLink->update([
-            'deleted' => true
-        ]);
+        $shortLink->delete();
     }
 }
