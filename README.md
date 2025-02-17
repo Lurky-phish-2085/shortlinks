@@ -16,3 +16,13 @@
 ## Description
 
 ShortLinks is a tool to shorten a long link and create a short URL easy to share on sites, chat and emails. Track short links traffic and manage your links.
+
+## Live Demo
+
+A live demo will be available soon! For now, please see the screenshots section.
+
+## Screenshots
+
+![ShortLinks](docs/images/shortlinks-main.png)
+![ShortLinks - Core Functionality 1](docs/images/shortlinks-f1.png)
+![ShortLinks - Core Functionality 2](docs/images/shortlinks-f2.png)
